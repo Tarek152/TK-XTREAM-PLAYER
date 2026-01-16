@@ -1,22 +1,28 @@
 name: Build Android APK
-on: [push, pull_request]
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: set up JDK 17
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
-      - name: Grant execute permission for gradlew
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
+      - name: Make Gradlew Executable
         run: chmod +x gradlew
-      - name: Build APK
+
+      - name: Build Debug APK
         run: ./gradlew assembleDebug
+
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: TK-Xtream-Player-Pro
+          name: TK-Xtream-Player
           path: app/build/outputs/apk/debug/app-debug.apk
